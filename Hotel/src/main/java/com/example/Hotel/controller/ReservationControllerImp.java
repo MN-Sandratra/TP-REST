@@ -16,7 +16,7 @@ import java.util.UUID;
 
 @RequestMapping("api/Reservation")
 @RestController
-public class ReservationControllerImp implements IReservationService{
+public class ReservationControllerImp{
 
     private final ReservationRepositoryImp reservationRepositoryImp;
 
@@ -25,9 +25,9 @@ public class ReservationControllerImp implements IReservationService{
         this.reservationRepositoryImp = reservationRepositoryImp;
     }
 
-    @Override
+
     @PostMapping
-    public String Reservation(@RequestBody int id, String login, String Password, UUID offre, String nom, String prenom, String cartecredit) throws NotPartnerExceptions, OffreNotFoundExceptions, OffreNotFoundExceptions, NotPartnerExceptions {
-        return reservationRepositoryImp.Reservation(id,login,Password,offre,nom,prenom,cartecredit);
+    public String Reservation(@RequestBody ReservationDTO reservationDTO) throws NotPartnerExceptions, OffreNotFoundExceptions, OffreNotFoundExceptions, NotPartnerExceptions {
+        return reservationRepositoryImp.Reservation(reservationDTO.getId(),reservationDTO.getLogin(),reservationDTO.getPassword(),reservationDTO.getOffre(), reservationDTO.getNom(), reservationDTO.getPrenom(), reservationDTO.getCartecredit());
     }
 }

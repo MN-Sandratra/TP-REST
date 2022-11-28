@@ -5,6 +5,7 @@ import java.awt.*;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 
+import com.example.Agence.AgenceApplication;
 import com.example.Agence.DTO.OffreDTO;
 import com.example.Agence.models.Offre;
 import java.awt.event.*;
@@ -13,6 +14,11 @@ import com.example.Agence.Data.AgenceData;
 import com.example.Agence.models.Webservice;
 import com.toedter.calendar.JDateChooser;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
@@ -28,7 +34,14 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-@Component
+
+@SpringBootApplication(scanBasePackages = {
+		"com.example.Agence.models",
+		"com.example.Agence.client",
+		"com.example.Agence.GUI",
+		"com.example.Agence.DTO",
+})
+
 public class HotelAgencyMain implements ActionListener{
 	@Autowired
 	private RestTemplate Offreproxy;
@@ -57,16 +70,24 @@ public class HotelAgencyMain implements ActionListener{
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					HotelAgencyMain window = new HotelAgencyMain();
-					window.frmHotelAgency.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
+		var ctx = new SpringApplicationBuilder(HotelAgencyMain.class)
+				.headless(false).run(args);
+
+		EventQueue.invokeLater(() -> {
+
+			var ex = ctx.getBean(HotelAgencyMain.class);
+			ex.frmHotelAgency.setVisible(true);
 		});
+//		EventQueue.invokeLater(new Runnable() {
+//			public void run() {
+//				try {
+//					HotelAgencyMain window = new HotelAgencyMain();
+//					window.frmHotelAgency.setVisible(true);
+//				} catch (Exception e) {
+//					e.printStackTrace();
+//				}
+//			}
+//		});
 	}
 
 	/**
@@ -80,7 +101,8 @@ public class HotelAgencyMain implements ActionListener{
 	/**
 	 * Initialize the contents of the frame.
 	 */
-	private void initialize() {
+
+	public void initialize() {
 		new AgenceData();
 		frmHotelAgency = new JFrame();
 		frmHotelAgency.setTitle("Hotel Agency");
@@ -265,10 +287,11 @@ public class HotelAgencyMain implements ActionListener{
 		for (Webservice ws : AgenceData.getAgence().getHotelPartennaire()
 			 ) {
 			OffreDTO offreDTO=new OffreDTO(AgenceData.getAgence().getId(),AgenceData.getAgence().getPassword(),datedeb,datefin,nbr);
+			System.out.println(Offreproxy == null);
 
-			String test=Offreproxy.getForObject("http://localhost:8080/",String.class);
+			String test=Offreproxy.getForObject("http://localhost:8080/api/offre",String.class);
 			System.out.println(test);
-			Offre[] offres = Offreproxy.postForObject("http://localhost:8080/api/test",offreDTO, Offre[].class);
+			Offre[] offres = Offreproxy.postForObject("http://localhost:8080/api/offre",offreDTO, Offre[].class);
 			//this.offreList = proxy.getOffres(AgenceData.getAgence().getId(),AgenceData.getAgence().getPassword(),datedeb,datefin,nbr);
 			System.out.println("Eto");
 			Arrays.asList(offres)
