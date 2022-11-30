@@ -6,6 +6,7 @@ import com.example.Hotel.model.Offre;
 import com.example.Hotel.model.Partenariat;
 import com.example.Hotel.model.Reservation;
 import com.example.Hotel.model.hotel.Chambre;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
@@ -15,6 +16,12 @@ import java.util.*;
 
 @Repository
 public class OffreRepositoryImp implements IOffreRepository {
+
+    @Autowired
+    private ReservationRepository reservationRepository;
+
+    @Autowired
+    private ChambreRepository chambreRepository;
 
     private final HotelData hotelData;
     public OffreRepositoryImp(HotelData hotelData) {
@@ -39,11 +46,10 @@ public class OffreRepositoryImp implements IOffreRepository {
             DateFin=LocalDate.parse(dateFin, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
             DateDebut=LocalDate.parse(dateDebut, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
         //Recherche des chambres disponibles
-        for (Chambre chambre : HotelData.getHotel().getChambres()) {
+        for (Chambre chambre : chambreRepository.findAll()) {
             boolean testeur=true;
-
             //update get date libre
-            for (Reservation res:HotelData.getReservations()) {
+            for (Reservation res:reservationRepository.findAll()) {
                 if(res.getChambre()==chambre && res.getDateDebut().isBefore(DateFin) && res.getDateFin().isAfter(DateFin)){
                     testeur=false;
                 }

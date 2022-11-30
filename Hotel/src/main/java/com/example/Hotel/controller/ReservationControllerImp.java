@@ -14,7 +14,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.UUID;
 
-@RequestMapping("api/Reservation")
+@RequestMapping("api/reservation")
 @RestController
 public class ReservationControllerImp{
 

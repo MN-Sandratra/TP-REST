@@ -1,13 +1,25 @@
 package com.example.Hotel.model.hotel;
 
+import org.hibernate.annotations.Cascade;
+
+import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 
+@Entity
 public class Chambre {
+    public Chambre() {
+    }
 
+    @Id
     private int numeroChambre;
+
+    @ElementCollection
+    @OneToMany(
+            orphanRemoval = true,
+            cascade = CascadeType.ALL)
     private List<Lit> lits;
 
     private String image;

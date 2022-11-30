@@ -1,5 +1,8 @@
 package com.example.Agence.GUI;
 
+import com.example.Agence.DTO.ReservationDTO;
+import org.springframework.web.client.RestTemplate;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -18,6 +21,10 @@ public class ClientWindows implements ActionListener {
     private JTextField textFieldCarte;
     private JButton btnNewButton;
     HotelAgencyMain hotel;
+
+    private RestTemplate resproxy;
+
+    private String link;
     /**
      * Launch the application.
      */
@@ -26,14 +33,15 @@ public class ClientWindows implements ActionListener {
     /**
      * Create the application.
      */
-//    public ClientWindows(IReservationService proxy, String agence, String password, String id, HotelAgencyMain hotel) {
-//        this.agence = agence;
-//        this.password = password;
-//        this.id = id;
-//        this.resproxy=proxy;
-//        this.hotel= hotel;
-//        initialize();
-//    }
+    public ClientWindows(String link, RestTemplate proxy, String agence, String password, String id, HotelAgencyMain hotel) {
+        this.agence = agence;
+        this.password = password;
+        this.id = id;
+        this.link=link;
+        this.resproxy=proxy;
+        this.hotel= hotel;
+        initialize();
+   }
 
     /**
      * Initialize the contents of the frame.
@@ -110,15 +118,18 @@ public class ClientWindows implements ActionListener {
                 JOptionPane.showMessageDialog(null,"Veuillez remplir tous les champs correctement","Attention !",JOptionPane.ERROR_MESSAGE);
             }else{
                 try {
-                    //JOptionPane.showMessageDialog(null,resproxy.reservation(1,agence,password,id,textFieldNom.getText(),textFieldPrenom.getText(),textFieldCarte.getText()));
+                    ReservationDTO res=new ReservationDTO(1,agence,password,id,textFieldNom.getText(),textFieldPrenom.getText(),textFieldCarte.getText());
+                    JOptionPane.showMessageDialog(null,resproxy.postForObject(link,res,String.class));
                     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
                     String dateDeb=sdf.format(this.hotel.getDateChooserDeb().getDate());
                     String dateFin=sdf.format(this.hotel.getDateChooserfin().getDate());
                     int nbrPers = Integer.parseInt(this.hotel.getTextFieldnbr().getText());
+
                     this.hotel.getOffre(dateDeb, dateFin, nbrPers);
                     this.frame.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
                 } catch (Exception ex) {
-                    JOptionPane.showMessageDialog(null,"votre login ou mot de passe est incorrect","Attention !",JOptionPane.ERROR_MESSAGE);
+                    ex.printStackTrace();
+                    JOptionPane.showMessageDialog(null,"Erreur de connexion","Attention !",JOptionPane.ERROR_MESSAGE);
                 }
             }
         }

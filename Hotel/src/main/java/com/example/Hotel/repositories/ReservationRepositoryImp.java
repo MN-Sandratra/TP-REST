@@ -7,10 +7,8 @@ import com.example.Hotel.model.Client;
 import com.example.Hotel.model.Offre;
 import com.example.Hotel.model.Partenariat;
 import com.example.Hotel.model.Reservation;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -21,9 +19,13 @@ import java.util.UUID;
 @Repository
 public class ReservationRepositoryImp implements IReservationRepository{
     private final HotelData hotelData;
+
+    @Autowired
+    private ReservationRepository reservationRepository;
     public ReservationRepositoryImp(HotelData hotelData){
         this.hotelData = hotelData;
     }
+
     @Override
     public String Reservation(int id, String login, String password, UUID offre, String nom, String prenom, String cartecredit) throws NotPartnerExceptions, OffreNotFoundExceptions {
         Client c=new Client(nom,prenom,cartecredit);
@@ -46,7 +48,7 @@ public class ReservationRepositoryImp implements IReservationRepository{
         LocalDate debut=LocalDate.parse(currentOffre.getDateDeDisponibiliteDeb());
         LocalDate fin=LocalDate.parse(currentOffre.getDateDeDisponibiliteFin());
         Reservation reservation=new Reservation(currentOffre.getChambre(),c,debut,fin);
-        HotelData.addReservation(reservation);
+        reservationRepository.save(reservation);
         String res="Reservation reussit reference : "+reservation.getId();
         return res;
     }

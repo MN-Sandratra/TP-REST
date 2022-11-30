@@ -39,7 +39,6 @@ public class Hotel {
     public List<Partenariat> getPartenariats() {
         return partenariats;
     }
-
     public void setPartenariats(List<Partenariat> partenariats) {
         this.partenariats = partenariats;
     }

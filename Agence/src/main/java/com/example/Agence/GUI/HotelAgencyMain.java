@@ -20,6 +20,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.BufferedReader;
@@ -189,7 +190,10 @@ public class HotelAgencyMain implements ActionListener{
 							String DateFin=sdf.format(dateChooserfin.getDate());
 							try {
 								getOffre(DateDeb,DateFin,nbrPers);
-							} catch (Exception ex) {
+							}catch (ResourceAccessException re){
+								JOptionPane.showMessageDialog(null,"Connexion refuser","Attention !",JOptionPane.ERROR_MESSAGE);
+							}
+							catch (Exception ex) {
 								ex.printStackTrace();
 								JOptionPane.showMessageDialog(null,"votre login ou mot de passe est incorrect","Attention !",JOptionPane.ERROR_MESSAGE);
 							}
@@ -287,46 +291,45 @@ public class HotelAgencyMain implements ActionListener{
 		for (Webservice ws : AgenceData.getAgence().getHotelPartennaire()
 			 ) {
 			OffreDTO offreDTO=new OffreDTO(AgenceData.getAgence().getId(),AgenceData.getAgence().getPassword(),datedeb,datefin,nbr);
-			System.out.println(Offreproxy == null);
+			if(Offreproxy == null){
+				JOptionPane.showMessageDialog(null,"Connexion refuser","Attention !",JOptionPane.ERROR_MESSAGE);
+			}else{
+				String test=Offreproxy.getForObject(ws.getOffre(), String.class);
+				System.out.println(test);
+				Offre[] offres = Offreproxy.postForObject(ws.getOffre(),offreDTO, Offre[].class);
+				Arrays.asList(offres)
+						.forEach(System.out::println);
 
-			String test=Offreproxy.getForObject("http://localhost:8080/api/offre",String.class);
-			System.out.println(test);
-			Offre[] offres = Offreproxy.postForObject("http://localhost:8080/api/offre",offreDTO, Offre[].class);
-			//this.offreList = proxy.getOffres(AgenceData.getAgence().getId(),AgenceData.getAgence().getPassword(),datedeb,datefin,nbr);
-			System.out.println("Eto");
-			Arrays.asList(offres)
-					.forEach(System.out::println);
-
-			allOffre.add(List.of(offres));
-			table.setModel(tableModel);
-			for (Offre f:offres
-			) {
-				String[] obj= {""+f.getId(),f.getDateDeDisponibiliteDeb(),f.getDateDeDisponibiliteFin(), String.valueOf(f.getPrix()), String.valueOf(f.getNbrLits())};
-				tableModel.addRow(obj);
+				allOffre.add(List.of(offres));
+				table.setModel(tableModel);
+				for (Offre f:offres
+				) {
+					String[] obj= {""+f.getId(),f.getDateDeDisponibiliteDeb(),f.getDateDeDisponibiliteFin(), String.valueOf(f.getPrix()), String.valueOf(f.getNbrLits())};
+					tableModel.addRow(obj);
+				}
 			}
 		}
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		//IReservationService currentproxy=reservationServiceImpServiceList.get(0);;
-		//IOffreService currentOffreproxy=offreServiceImpServiceList.get(0);
+		Webservice currentproxy = AgenceData.getAgence().getHotelPartennaire().get(0);
+		Webservice currentOffreproxy;
 		int currentnbr=0;
-//		for (List<Offre> off:allOffre
-//		) {
-//			for (Offre of:off
-//			) {
-//				if(of.getId().equals(currentTableID)){
-//					currentproxy=reservationServiceImpServiceList.get(currentnbr);
-//					currentOffreproxy=offreServiceImpServiceList.get(currentnbr);
-//				}
-//			}
-//			currentnbr+=1;
-//		}
+		for (List<Offre> off:allOffre) {
+			for (Offre of:off
+			) {
+				if (("" + of.getId()).equals(currentTableID)) {
+					currentproxy = AgenceData.getAgence().getHotelPartennaire().get(currentnbr);
+					break;
+				}
+			}
+			currentnbr+=1;
+		}
 		if(e.getSource()==btnReservation){
 			int i=0;
-			//ClientWindows mywindow = new ClientWindows(currentproxy,AgenceData.getAgence().getLogin(), AgenceData.getAgence().getPassword(), currentTableID, this);
-			//mywindow.frame.setVisible(true);
+			ClientWindows mywindow = new ClientWindows(currentproxy.getReservation(),Offreproxy,AgenceData.getAgence().getLogin(), AgenceData.getAgence().getPassword(), currentTableID, this);
+			mywindow.frame.setVisible(true);
 		}
 
 		if (e.getSource()==btnImage){
@@ -335,11 +338,10 @@ public class HotelAgencyMain implements ActionListener{
 			for (List<Offre> offres:allOffre
 				 ) {
 				int i = 0;
-//				while (i < offres.size() && !offres.get(i).getId().equals(currentTableID)){
-//					i++;
-//				}
+				while (i < offres.size() && !offres.get(i).getId().equals(currentTableID)){
+					i++;
+				}
 				//image = offres.get(i).getChambre().getImage();
-
 			}
 			try {
 				mywindow = new ImageWindows(image);

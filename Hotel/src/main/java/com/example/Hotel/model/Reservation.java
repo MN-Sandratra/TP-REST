@@ -1,14 +1,24 @@
 package com.example.Hotel.model;
 
 import com.example.Hotel.model.hotel.Chambre;
+import org.hibernate.annotations.Type;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.OneToOne;
 import java.time.LocalDate;
 import java.util.UUID;
 
+@Entity
 public class Reservation {
 
+    @Id
+    @Type(type = "uuid-char")
     private UUID id;
+    @OneToOne(cascade = CascadeType.ALL)
     private Chambre chambre;
+    @OneToOne(cascade = CascadeType.ALL)
     private Client client;
     private LocalDate dateDebut;
 
@@ -20,6 +30,9 @@ public class Reservation {
         this.client = client;
         this.dateDebut = dateDebut;
         this.dateFin = dateFin;
+    }
+
+    public Reservation() {
     }
 
     public Client getClient() {

@@ -9,7 +9,7 @@ import java.util.List;
 public class AgenceData {
     static Agence agence;
 
-    private List<Webservice> getAgenceHotel(){
+    public List<Webservice> getAgenceHotel(){
         return agence.getHotelPartennaire();
     }
 
@@ -28,7 +28,7 @@ public class AgenceData {
         agence.setId(1);
         agence.setLogin("AgenceMontpellier");
         agence.setPassword("test123");
-        Webservice h1=new Webservice("http://localhost:8080/reservationService","http://localhost:8080/api/offre");
+        Webservice h1=new Webservice("http://localhost:8080/api/reservation","http://localhost:8080/api/offre");
         hotelPart.add(h1);
         agence.setHotelPartennaire(hotelPart);
     }

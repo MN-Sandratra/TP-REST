@@ -11,7 +11,6 @@ public class Partenariat {
         this.pourcentage = pourcentage;
         this.Password = password;
         this.login=login;
-
     }
 
     public int getAgence() {
