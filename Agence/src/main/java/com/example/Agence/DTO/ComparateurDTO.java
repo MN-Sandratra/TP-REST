@@ -5,14 +5,14 @@ public class ComparateurDTO {
     private String dateDebut;
     private String dateFin;
     int nbrPerson;
-    int nbretoile;
+    int nbrEtoile;
 
     public ComparateurDTO(String ville, String dateDebut, String dateFin, int nbrPerson, int nbretoile) {
         this.ville = ville;
         this.dateDebut = dateDebut;
         this.dateFin = dateFin;
         this.nbrPerson = nbrPerson;
-        this.nbretoile = nbretoile;
+        this.nbrEtoile = nbretoile;
     }
 
     public String getVille() {
@@ -47,11 +47,11 @@ public class ComparateurDTO {
         this.nbrPerson = nbrPerson;
     }
 
-    public int getNbretoile() {
-        return nbretoile;
+    public int getNbrEtoile() {
+        return nbrEtoile;
     }
 
     public void setNbretoile(int nbretoile) {
-        this.nbretoile = nbretoile;
+        this.nbrEtoile = nbretoile;
     }
 }

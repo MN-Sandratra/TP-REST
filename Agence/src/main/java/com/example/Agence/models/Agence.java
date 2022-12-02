@@ -8,7 +8,7 @@ public class Agence {
     String Login;
     String Password;
 
-    List<Webservice> Hotelpartenaire;
+    List<Hotel> Hotelpartenaire;
 
 
     public Agence() {
@@ -38,10 +38,10 @@ public class Agence {
         Password = password;
     }
 
-    public void setHotelPartennaire(List<Webservice> hotelPart) {
+    public void setHotelPartennaire(List<Hotel> hotelPart) {
         Hotelpartenaire=hotelPart;
     }
-    public List<Webservice> getHotelPartennaire() {
+    public List<Hotel> getHotelPartennaire() {
         return Hotelpartenaire;
     }
 }

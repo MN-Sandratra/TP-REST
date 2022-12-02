@@ -2,23 +2,28 @@ package com.example.Agence.GUI;
 
 import java.awt.*;
 
+import javax.persistence.Entity;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 
 import com.example.Agence.AgenceApplication;
 import com.example.Agence.DTO.OffreDTO;
+import com.example.Agence.models.Hotel;
 import com.example.Agence.models.Offre;
 import java.awt.event.*;
 
 import com.example.Agence.Data.AgenceData;
 import com.example.Agence.models.Webservice;
+import com.example.Agence.repository.HotelRepository;
 import com.toedter.calendar.JDateChooser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.annotation.Bean;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
@@ -35,17 +40,28 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-
-@SpringBootApplication(scanBasePackages = {
+@EntityScan(basePackages = {
 		"com.example.Agence.models",
+})
+
+@EnableJpaRepositories(basePackages = {
+		"com.example.Agence.repository",
+})
+@SpringBootApplication(scanBasePackages = {
+		"com.example.Agence.controller",
+		"com.example.Agence.repository",
 		"com.example.Agence.client",
 		"com.example.Agence.GUI",
+		"com.example.Agence.Data",
 		"com.example.Agence.DTO",
 })
 
 public class HotelAgencyMain implements ActionListener{
 	@Autowired
 	private RestTemplate Offreproxy;
+
+	@Autowired
+	private HotelRepository hotelRepository;
 
 	private JFrame frmHotelAgency;
 	private JTextField textFieldnbr;
@@ -75,7 +91,6 @@ public class HotelAgencyMain implements ActionListener{
 				.headless(false).run(args);
 
 		EventQueue.invokeLater(() -> {
-
 			var ex = ctx.getBean(HotelAgencyMain.class);
 			ex.frmHotelAgency.setVisible(true);
 		});
@@ -286,17 +301,19 @@ public class HotelAgencyMain implements ActionListener{
 //	}
 
 	public void getOffre(String datedeb,String datefin,int nbr){
+		List<Hotel> h=hotelRepository.findAll();
+		AgenceData.getAgence().setHotelPartennaire(h);
 		String col[] = {"Reference","Date de Debut","Fin de disponibilite","Prix", "Nombre de lits"};
 		DefaultTableModel tableModel = new DefaultTableModel(col, 0);
-		for (Webservice ws : AgenceData.getAgence().getHotelPartennaire()
+		for (Hotel ws : AgenceData.getAgence().getHotelPartennaire()
 			 ) {
 			OffreDTO offreDTO=new OffreDTO(AgenceData.getAgence().getId(),AgenceData.getAgence().getPassword(),datedeb,datefin,nbr);
 			if(Offreproxy == null){
 				JOptionPane.showMessageDialog(null,"Connexion refuser","Attention !",JOptionPane.ERROR_MESSAGE);
 			}else{
-				String test=Offreproxy.getForObject(ws.getOffre(), String.class);
+				String test=Offreproxy.getForObject(ws.getWebservice().getOffre(), String.class);
 				System.out.println(test);
-				Offre[] offres = Offreproxy.postForObject(ws.getOffre(),offreDTO, Offre[].class);
+				Offre[] offres = Offreproxy.postForObject(ws.getWebservice().getOffre(),offreDTO, Offre[].class);
 				Arrays.asList(offres)
 						.forEach(System.out::println);
 
@@ -313,14 +330,14 @@ public class HotelAgencyMain implements ActionListener{
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		Webservice currentproxy = AgenceData.getAgence().getHotelPartennaire().get(0);
+		Webservice currentproxy = AgenceData.getAgence().getHotelPartennaire().get(0).getWebservice();
 		Webservice currentOffreproxy;
 		int currentnbr=0;
 		for (List<Offre> off:allOffre) {
 			for (Offre of:off
 			) {
 				if (("" + of.getId()).equals(currentTableID)) {
-					currentproxy = AgenceData.getAgence().getHotelPartennaire().get(currentnbr);
+					currentproxy = AgenceData.getAgence().getHotelPartennaire().get(currentnbr).getWebservice();
 					break;
 				}
 			}

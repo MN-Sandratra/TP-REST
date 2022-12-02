@@ -1,6 +1,14 @@
 package com.example.Agence.models;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+
+@Entity
 public class Webservice {
+        @Id
+        @GeneratedValue
+        int id;
         String reservation;
         String Offre;
 
@@ -8,6 +16,10 @@ public class Webservice {
             this.reservation=reservation;
             this.Offre=offre;
         }
+
+    public Webservice() {
+
+    }
 
     public String getReservation() {
         return reservation;

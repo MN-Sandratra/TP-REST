@@ -1,12 +1,22 @@
 package com.example.Agence.models;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.OneToOne;
+
+@Entity
 public class Hotel {
+
+    @Id
     private int id;
     private String Nom;
     private String Pays;
     private String Ville;
     private int nbrEtoile;
+    @OneToOne(cascade=CascadeType.ALL)
     private Webservice webservice;
+
 
     public Hotel(int id, String nom, String pays, String ville, int nbrEtoile, Webservice webservice) {
         this.id = id;
@@ -15,6 +25,10 @@ public class Hotel {
         Ville = ville;
         this.nbrEtoile = nbrEtoile;
         this.webservice = webservice;
+    }
+
+    public Hotel() {
+
     }
 
     public int getId() {
