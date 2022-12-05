@@ -1,8 +1,8 @@
-package com.example.Agence.DTO;
+package com.example.comparateur.DTO;
 
 import java.util.UUID;
 
-public class OffreComparateurDTO {
+public class OffreComparateurResDTO {
     private UUID id;
     private String nom_hotel;
     private String pays;
@@ -11,7 +11,7 @@ public class OffreComparateurDTO {
     private int nbrEtoile;
     private double prix;
 
-    public OffreComparateurDTO(String nom_hotel, String pays, String ville, int nbrLits, int nbrEtoile, double prix) {
+    public OffreComparateurResDTO(String nom_hotel, String pays, String ville, int nbrLits, int nbrEtoile, double prix) {
         this.id = UUID.randomUUID();
         this.nom_hotel = nom_hotel;
         this.pays = pays;

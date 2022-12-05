@@ -27,8 +27,6 @@ public class OffreRepository {
         List<OffreComparateurDTO> offres = new ArrayList<>();
         for (Hotel h :hotelRepository.findAll()
         ) {
-            System.out.println("eto :"+h.getVille() +" Hotel: "+h.getNbrEtoile()+" Etoiles");
-            System.out.println(" tadiaviko  die ao :"+comparateur.getVille() +" Hotel: "+comparateur.getNbrEtoile()+" Etoiles");
             Webservice ws= h.getWebservice();
             if(h.getVille().equals(comparateur.getVille()) && h.getNbrEtoile()>=comparateur.getNbrEtoile()){
                 OffreDTO offreDTO=new OffreDTO(AgenceData.getAgence().getId(),AgenceData.getAgence().getPassword(),comparateur.getDateDebut(),comparateur.getDateFin(),comparateur.getNbrPerson());

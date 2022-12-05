@@ -4,7 +4,9 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/Hotel/Hotel.iml" filepath="$PROJECT_DIR$/Hotel/Hotel.iml" />
       <module fileurl="file://$PROJECT_DIR$/Agence/Hotel (1).iml" filepath="$PROJECT_DIR$/Agence/Hotel (1).iml" />
+      <module fileurl="file://$PROJECT_DIR$/Hotel/Hotel (2).iml" filepath="$PROJECT_DIR$/Hotel/Hotel (2).iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/TP-REST.iml" filepath="$PROJECT_DIR$/.idea/TP-REST.iml" />
+      <module fileurl="file://$PROJECT_DIR$/comparateur/comparateur.iml" filepath="$PROJECT_DIR$/comparateur/comparateur.iml" />
     </modules>
   </component>
 </project>
