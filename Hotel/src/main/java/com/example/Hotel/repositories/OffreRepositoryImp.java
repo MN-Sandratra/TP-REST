@@ -66,7 +66,7 @@ public class OffreRepositoryImp implements IOffreRepository {
                 prixTotal=getPrix(prixTotal,target.get().getPourcentage());
 
                 if (chambre.getNbPlace() >= nbrPersonne) {
-                    Offre res=new Offre(chambre.getNbPlace(),chambre,dateDebut,dateFin,prixTotal);
+                    Offre res=new Offre(chambre.getNbPlace(),chambre.getImage(),chambre.getNumeroChambre(),dateDebut,dateFin,prixTotal);
                     listOffres.add(res);
                     HotelData.AddOffre(res);
                     index++;

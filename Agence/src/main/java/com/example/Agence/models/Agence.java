@@ -5,10 +5,12 @@ import java.util.List;
 
 public class Agence {
     int id ;
+
+    String Nom;
     String Login;
     String Password;
 
-    List<Hotel> Hotelpartenaire;
+   // List<Hotel> Hotelpartenaire;
 
 
     public Agence() {
@@ -38,10 +40,18 @@ public class Agence {
         Password = password;
     }
 
-    public void setHotelPartennaire(List<Hotel> hotelPart) {
-        Hotelpartenaire=hotelPart;
+    public String getNom() {
+        return Nom;
     }
-    public List<Hotel> getHotelPartennaire() {
-        return Hotelpartenaire;
+
+    public void setNom(String nom) {
+        Nom = nom;
     }
+
+//    public void setHotelPartennaire(List<Hotel> hotelPart) {
+//        Hotelpartenaire=hotelPart;
+//    }
+//    public List<Hotel> getHotelPartennaire() {
+//        return Hotelpartenaire;
+//    }
 }

@@ -81,6 +81,6 @@ public class Adresse {
 
     @Override
     public String toString() {
-        return "Adresse : [" + pays + ", " + ville + ", " + rue + ", " + numero + ", " + lieu + ", " + gps + "]";
+        return "" + pays + ", " + ville + ", " + rue + ", " + numero + ", " + lieu + ", " + gps + "";
     }
 }

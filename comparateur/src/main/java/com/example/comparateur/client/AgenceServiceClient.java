@@ -1,4 +1,4 @@
-package com.example.comparateur.Client;
+package com.example.comparateur.client;
 
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;

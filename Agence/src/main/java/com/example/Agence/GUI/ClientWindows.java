@@ -119,13 +119,15 @@ public class ClientWindows implements ActionListener {
             }else{
                 try {
                     ReservationDTO res=new ReservationDTO(1,agence,password,id,textFieldNom.getText(),textFieldPrenom.getText(),textFieldCarte.getText());
-                    JOptionPane.showMessageDialog(null,resproxy.postForObject(link,res,String.class));
+                    JOptionPane.showMessageDialog(null,resproxy.postForObject(link+"reservation",res,String.class));
                     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
                     String dateDeb=sdf.format(this.hotel.getDateChooserDeb().getDate());
                     String dateFin=sdf.format(this.hotel.getDateChooserfin().getDate());
                     int nbrPers = Integer.parseInt(this.hotel.getTextFieldnbr().getText());
 
                     this.hotel.getOffre(dateDeb, dateFin, nbrPers);
+                    this.hotel.btnReservation.setEnabled(false);
+                    this.hotel.btnImage.setEnabled(false);
                     this.frame.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
                 } catch (Exception ex) {
                     ex.printStackTrace();

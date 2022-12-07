@@ -2,39 +2,27 @@ package com.example.Agence.GUI;
 
 import java.awt.*;
 
-import javax.persistence.Entity;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 
-import com.example.Agence.AgenceApplication;
+import com.example.Agence.DTO.HotelInfoDTO;
 import com.example.Agence.DTO.OffreDTO;
-import com.example.Agence.models.Hotel;
 import com.example.Agence.models.Offre;
 import java.awt.event.*;
 
 import com.example.Agence.Data.AgenceData;
 import com.example.Agence.models.Webservice;
-import com.example.Agence.repository.HotelRepository;
+import com.example.Agence.repository.WebserviceRepository;
 import com.toedter.calendar.JDateChooser;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.builder.SpringApplicationBuilder;
-import org.springframework.context.annotation.Bean;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
-import org.springframework.stereotype.Component;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLConnection;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -61,15 +49,15 @@ public class HotelAgencyMain implements ActionListener{
 	private RestTemplate Offreproxy;
 
 	@Autowired
-	private HotelRepository hotelRepository;
+	private WebserviceRepository webserviceRepository;
 
 	private JFrame frmHotelAgency;
 	private JTextField textFieldnbr;
 	private JTable table;
 //	private OffreServiceImpService Offre;
 //	private IOffreService proxy;
-	private JButton btnReservation;
-	private JButton btnImage;
+	public JButton btnReservation;
+	public JButton btnImage;
 	private JDateChooser dateChooserDeb;
 	private JDateChooser dateChooserfin;
 //	ReservationServiceImpService res;
@@ -94,16 +82,7 @@ public class HotelAgencyMain implements ActionListener{
 			var ex = ctx.getBean(HotelAgencyMain.class);
 			ex.frmHotelAgency.setVisible(true);
 		});
-//		EventQueue.invokeLater(new Runnable() {
-//			public void run() {
-//				try {
-//					HotelAgencyMain window = new HotelAgencyMain();
-//					window.frmHotelAgency.setVisible(true);
-//				} catch (Exception e) {
-//					e.printStackTrace();
-//				}
-//			}
-//		});
+//
 	}
 
 	/**
@@ -123,13 +102,13 @@ public class HotelAgencyMain implements ActionListener{
 		frmHotelAgency = new JFrame();
 		frmHotelAgency.setTitle("Hotel Agency");
 		frmHotelAgency.setResizable(false);
-		frmHotelAgency.setBounds(100, 100, 900, 454);
+		frmHotelAgency.setBounds(100, 100, 1000, 454);
 		frmHotelAgency.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmHotelAgency.getContentPane().setLayout(null);
 		
 		JPanel panel = new JPanel();
 		panel.setBackground(Color.WHITE);
-		panel.setBounds(0, 0, 892, 421);
+		panel.setBounds(0, 0, 999, 421);
 		frmHotelAgency.getContentPane().add(panel);
 		panel.setLayout(null);
 		
@@ -232,13 +211,13 @@ public class HotelAgencyMain implements ActionListener{
 			}
 		});
 		JScrollPane scrollPane = new JScrollPane(table);
-		scrollPane.setBounds(267, 96, 590, 240);
+		scrollPane.setBounds(267, 96, 690, 240);
 		panel.add(scrollPane);
 
 		
 		JPanel panel_4 = new JPanel();
 		panel_4.setBackground(Color.LIGHT_GRAY);
-		panel_4.setBounds(267, 75, 590, 22);
+		panel_4.setBounds(267, 75, 690, 22);
 		panel.add(panel_4);
 		
 		JLabel lblNewLabel = new JLabel("Offre Disponible");
@@ -247,7 +226,7 @@ public class HotelAgencyMain implements ActionListener{
 		
 		btnReservation = new JButton("Reservation");
 		btnReservation.addActionListener(this);
-		btnReservation.setBounds(730, 347, 126, 30);
+		btnReservation.setBounds(830, 347, 126, 30);
 		panel.add(btnReservation);
 		btnReservation.setEnabled(false);
 
@@ -273,8 +252,6 @@ public class HotelAgencyMain implements ActionListener{
 		mnNewMenu.add(mntmNewMenuItem);
 		String col[] = {"Nom","Nom Maitre","Espece","Race","Suivi"};
 		DefaultTableModel tableModel = new DefaultTableModel(col, 0);
-		
-		JButton btnSupprimer = new JButton("Supprimer");
 	}
 //	public void initWebService(){
 //		new AgenceData();
@@ -301,27 +278,28 @@ public class HotelAgencyMain implements ActionListener{
 //	}
 
 	public void getOffre(String datedeb,String datefin,int nbr){
-		List<Hotel> h=hotelRepository.findAll();
-		AgenceData.getAgence().setHotelPartennaire(h);
-		String col[] = {"Reference","Date de Debut","Fin de disponibilite","Prix", "Nombre de lits"};
+		allOffre=new ArrayList<>();
+		String col[] = {"Reference","Hotel","Date de Debut","Fin de disponibilite","Prix", "Nombre de lits"};
 		DefaultTableModel tableModel = new DefaultTableModel(col, 0);
-		for (Hotel ws : AgenceData.getAgence().getHotelPartennaire()
+		for (Webservice ws : webserviceRepository.findAll()
 			 ) {
 			OffreDTO offreDTO=new OffreDTO(AgenceData.getAgence().getId(),AgenceData.getAgence().getPassword(),datedeb,datefin,nbr);
 			if(Offreproxy == null){
 				JOptionPane.showMessageDialog(null,"Connexion refuser","Attention !",JOptionPane.ERROR_MESSAGE);
 			}else{
-				String test=Offreproxy.getForObject(ws.getWebservice().getOffre(), String.class);
-				System.out.println(test);
-				Offre[] offres = Offreproxy.postForObject(ws.getWebservice().getOffre(),offreDTO, Offre[].class);
+				Offre[] offres = Offreproxy.postForObject(ws.getUri()+"offre",offreDTO, Offre[].class);
 				Arrays.asList(offres)
 						.forEach(System.out::println);
 
 				allOffre.add(List.of(offres));
 				table.setModel(tableModel);
+
+				//get HotelInfo
+				HotelInfoDTO hotelInfoDTO = Offreproxy.getForObject(ws.getUri()+"hotel",HotelInfoDTO.class);
+
 				for (Offre f:offres
 				) {
-					String[] obj= {""+f.getId(),f.getDateDeDisponibiliteDeb(),f.getDateDeDisponibiliteFin(), String.valueOf(f.getPrix()), String.valueOf(f.getNbrLits())};
+					String[] obj= {""+f.getId(),hotelInfoDTO.getNomHotel(),f.getDateDeDisponibiliteDeb(),f.getDateDeDisponibiliteFin(), String.valueOf(f.getPrix()), String.valueOf(f.getNbrLits())};
 					tableModel.addRow(obj);
 				}
 			}
@@ -330,14 +308,15 @@ public class HotelAgencyMain implements ActionListener{
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		Webservice currentproxy = AgenceData.getAgence().getHotelPartennaire().get(0).getWebservice();
+		Webservice currentproxy = new Webservice();
 		Webservice currentOffreproxy;
-		int currentnbr=0;
+		long currentnbr=1;
 		for (List<Offre> off:allOffre) {
 			for (Offre of:off
 			) {
-				if (("" + of.getId()).equals(currentTableID)) {
-					currentproxy = AgenceData.getAgence().getHotelPartennaire().get(currentnbr).getWebservice();
+				if (("" +of.getId()).equals(currentTableID)) {
+					System.out.println(of.getId() +"-"+ currentnbr+'-'+of.getImage());
+					currentproxy = webserviceRepository.findById(currentnbr).get();
 					break;
 				}
 			}
@@ -345,20 +324,22 @@ public class HotelAgencyMain implements ActionListener{
 		}
 		if(e.getSource()==btnReservation){
 			int i=0;
-			ClientWindows mywindow = new ClientWindows(currentproxy.getReservation(),Offreproxy,AgenceData.getAgence().getLogin(), AgenceData.getAgence().getPassword(), currentTableID, this);
+			ClientWindows mywindow = new ClientWindows(currentproxy.getUri(),Offreproxy,AgenceData.getAgence().getLogin(), AgenceData.getAgence().getPassword(), currentTableID, this);
 			mywindow.frame.setVisible(true);
 		}
 
 		if (e.getSource()==btnImage){
 			String image="";
-			ImageWindows mywindow = null;
+			ImageWindows mywindow=null;
 			for (List<Offre> offres:allOffre
 				 ) {
-				int i = 0;
-				while (i < offres.size() && !offres.get(i).getId().equals(currentTableID)){
-					i++;
+				for (Offre of:offres
+				) {
+					if (("" +of.getId()).equals(currentTableID)) {
+						image=of.getImage();
+						break;
+					}
 				}
-				//image = offres.get(i).getChambre().getImage();
 			}
 			try {
 				mywindow = new ImageWindows(image);

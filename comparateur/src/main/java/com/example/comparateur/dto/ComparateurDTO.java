@@ -1,4 +1,4 @@
-package com.example.comparateur.DTO;
+package com.example.comparateur.dto;
 
 public class ComparateurDTO {
     private String ville;

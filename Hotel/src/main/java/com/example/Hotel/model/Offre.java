@@ -9,19 +9,23 @@ import java.util.UUID;
 public class Offre {
     private UUID id;
     private int nbrLits;
-    private Chambre chambre;
+    private String Image;
+    private int ChambreId;
     private String dateDeDisponibiliteDeb;
     private String dateDeDisponibiliteFin;
     private double prix;
 
-    public Offre(int nbrLits, Chambre c, String dateDeDisponibiliteDeb, String getDateDeDisponibiliteFin, double prix) {
+    public Offre(int nbrLits, String image, int chambreId, String dateDeDisponibiliteDeb, String dateDeDisponibiliteFin, double prix) {
         this.id = UUID.randomUUID();
         this.nbrLits = nbrLits;
-        this.chambre=c;
+        Image = image;
+        ChambreId = chambreId;
         this.dateDeDisponibiliteDeb = dateDeDisponibiliteDeb;
-        this.dateDeDisponibiliteFin = getDateDeDisponibiliteFin;
+        this.dateDeDisponibiliteFin = dateDeDisponibiliteFin;
         this.prix = prix;
     }
+
+
 
     public UUID getId() {
         return id;
@@ -65,22 +69,19 @@ public class Offre {
         this.prix = prix;
     }
 
-    public Chambre getChambre() {
-        return chambre;
+    public String getImage() {
+        return Image;
     }
 
-    public void setChambre(Chambre chambre) {
-        this.chambre = chambre;
+    public void setImage(String image) {
+        Image = image;
     }
 
-    @Override
-    public String toString() {
-        return "Offre{" +
-                "id: "+ id +
-                ", nbrLits: " + nbrLits +
-                ", Date de debut de disponibilite: " + dateDeDisponibiliteDeb +
-                ",Date de debut de disponibilite:" + dateDeDisponibiliteFin +
-                ", prix: " + prix + ", chambre: " + chambre +
-                '}';
+    public int getChambreId() {
+        return ChambreId;
+    }
+
+    public void setChambreId(int chambreId) {
+        ChambreId = chambreId;
     }
 }

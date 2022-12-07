@@ -5,17 +5,18 @@ import java.util.UUID;
 public class OffreComparateurDTO {
     private UUID id;
     private String nom_hotel;
-    private String pays;
-    private String ville;
+    private String adresse;
+
+    private String image;
     private int nbrLits;
     private int nbrEtoile;
     private double prix;
 
-    public OffreComparateurDTO(String nom_hotel, String pays, String ville, int nbrLits, int nbrEtoile, double prix) {
+    public OffreComparateurDTO(String nom_hotel,String adresse,String image, int nbrLits, int nbrEtoile, double prix) {
         this.id = UUID.randomUUID();
         this.nom_hotel = nom_hotel;
-        this.pays = pays;
-        this.ville = ville;
+        this.adresse = adresse;
+        this.image=image;
         this.nbrLits = nbrLits;
         this.nbrEtoile = nbrEtoile;
         this.prix = prix;
@@ -37,20 +38,12 @@ public class OffreComparateurDTO {
         this.nom_hotel = nom_hotel;
     }
 
-    public String getPays() {
-        return pays;
+    public String getAdresse() {
+        return adresse;
     }
 
-    public void setPays(String pays) {
-        this.pays = pays;
-    }
-
-    public String getVille() {
-        return ville;
-    }
-
-    public void setVille(String ville) {
-        this.ville = ville;
+    public void setAdresse(String adresse) {
+        this.adresse = adresse;
     }
 
     public int getNbrLits() {
@@ -75,5 +68,13 @@ public class OffreComparateurDTO {
 
     public void setPrix(double prix) {
         this.prix = prix;
+    }
+
+    public String getImage() {
+        return this.image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
     }
 }

@@ -1,4 +1,4 @@
-package com.example.comparateur.GUI;
+package com.example.comparateur.gui;
 
 import java.awt.EventQueue;
 
@@ -14,18 +14,16 @@ import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.List;
 
-import com.example.comparateur.DTO.ComparateurDTO;
-import com.example.comparateur.DTO.OffreComparateurResDTO;
-import com.example.comparateur.Model.Agence;
-import com.example.comparateur.Repository.AgenceRepository;
+import com.example.comparateur.dto.ComparateurDTO;
+import com.example.comparateur.dto.OffreComparateurResDTO;
+import com.example.comparateur.model.Agence;
+import com.example.comparateur.repository.AgenceRepository;
 import com.toedter.calendar.JDateChooser;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.SpringBootConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
-import org.springframework.data.repository.RepositoryDefinition;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
 
@@ -34,18 +32,17 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.table.DefaultTableModel;
 
 @EntityScan(basePackages = {
-        "com.example.comparateur.Model",
+        "com.example.comparateur.model",
 })
 @EnableJpaRepositories(basePackages = {
-        "com.example.comparateur.Repository",
+        "com.example.comparateur.repository",
 })
 @SpringBootApplication(scanBasePackages = {
         "com.example.comparateur.controller",
-        "com.example.comparateur.repository",
         "com.example.comparateur.client",
         "com.example.comparateur.GUI",
         "com.example.comparateur.Data",
-        "com.example.Agence.DTO",
+        "com.example.Agence.dto",
 })
 public class Comparateur {
 
@@ -64,7 +61,7 @@ public class Comparateur {
      * Launch the application.
      */
     private void getAgence(String ville, String dateDeb, String dateFin, int nbrPers, int etoile) {
-        List<Agence> agences=this.agenceRepository.findAll();
+        List<Agence> agences=agenceRepository.findAll();
         String col[] = {"Reference","Hotel","Pays","Ville","Place","Etoile","Prix"};
         DefaultTableModel tableModel = new DefaultTableModel(col, 0);
         for (Agence ag : agences
@@ -73,13 +70,14 @@ public class Comparateur {
             if(Comparateurproxy == null){
                 JOptionPane.showMessageDialog(null,"Connexion refuser","Attention !",JOptionPane.ERROR_MESSAGE);
             }else{
-                OffreComparateurResDTO[] offres = Comparateurproxy.postForObject(ag.getWebService(),comparateurDTO, OffreComparateurResDTO[].class);
+                OffreComparateurResDTO[] offres = Comparateurproxy.postForObject(ag.getWebService()+"comparateur",comparateurDTO, OffreComparateurResDTO[].class);
                 Arrays.asList(offres)
                         .forEach(System.out::println);
                 table.setModel(tableModel);
                 for (OffreComparateurResDTO f:offres
                 ) {
-                    String[] obj= {""+f.getId(),f.getNom_hotel(),f.getPays(),f.getVille(),""+f.getNbrLits(),""+f.getNbrEtoile(),""+f.getPrix()};
+                    String[] adresse=f.getAdresse().trim().split(",");
+                    String[] obj= {""+f.getId(),f.getNom_hotel(),adresse[0],adresse[1],""+f.getNbrLits(),""+f.getNbrEtoile(),""+f.getPrix()};
                     tableModel.addRow(obj);
                 }
             }

@@ -1,7 +1,7 @@
-package com.example.comparateur.Data;
+package com.example.comparateur.data;
 
-import com.example.comparateur.Model.Agence;
-import com.example.comparateur.Repository.AgenceRepository;
+import com.example.comparateur.model.Agence;
+import com.example.comparateur.repository.AgenceRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
@@ -17,7 +17,7 @@ public class AgenceData {
     public CommandLineRunner initDatabase(AgenceRepository agenceRepository){
         return args -> {
             logger.info("Preloading Agence Database");
-            String ws="http://localhost:8090/api/comparateur";
+            String ws="http://localhost:8090/api/";
             agenceRepository.save(new Agence( "Agence Montpellier",ws));
             logger.info("Save Agence Finished");
         };

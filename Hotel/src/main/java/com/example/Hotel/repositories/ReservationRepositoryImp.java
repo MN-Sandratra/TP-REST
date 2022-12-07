@@ -7,6 +7,7 @@ import com.example.Hotel.model.Client;
 import com.example.Hotel.model.Offre;
 import com.example.Hotel.model.Partenariat;
 import com.example.Hotel.model.Reservation;
+import com.example.Hotel.model.hotel.Chambre;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -22,6 +23,9 @@ public class ReservationRepositoryImp implements IReservationRepository{
 
     @Autowired
     private ReservationRepository reservationRepository;
+
+    @Autowired
+    private ChambreRepository chambreRepository;
     public ReservationRepositoryImp(HotelData hotelData){
         this.hotelData = hotelData;
     }
@@ -47,7 +51,9 @@ public class ReservationRepositoryImp implements IReservationRepository{
         Offre currentOffre=offertarget.get();
         LocalDate debut=LocalDate.parse(currentOffre.getDateDeDisponibiliteDeb());
         LocalDate fin=LocalDate.parse(currentOffre.getDateDeDisponibiliteFin());
-        Reservation reservation=new Reservation(currentOffre.getChambre(),c,debut,fin);
+        //Recherche par id
+        Chambre currentChambre=chambreRepository.findById(currentOffre.getChambreId()).get();
+        Reservation reservation=new Reservation(currentChambre,c,debut,fin);
         reservationRepository.save(reservation);
         String res="Reservation reussit reference : "+reservation.getId();
         return res;

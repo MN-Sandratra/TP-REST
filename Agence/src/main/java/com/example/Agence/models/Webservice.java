@@ -8,32 +8,22 @@ import javax.persistence.Id;
 public class Webservice {
         @Id
         @GeneratedValue
-        int id;
-        String reservation;
-        String Offre;
+        Long id;
+        String uri;
 
-        public Webservice(String reservation,String offre){
-            this.reservation=reservation;
-            this.Offre=offre;
+        public Webservice(String uri){
+            this.uri=uri;
         }
 
     public Webservice() {
 
     }
 
-    public String getReservation() {
-        return reservation;
+    public void setUri(String uri) {
+        this.uri = uri;
     }
 
-    public void setReservation(String reservation) {
-        this.reservation = reservation;
-    }
-
-    public String getOffre() {
-        return Offre;
-    }
-
-    public void setOffre(String offre) {
-        Offre = offre;
+    public String getUri() {
+        return uri;
     }
 }

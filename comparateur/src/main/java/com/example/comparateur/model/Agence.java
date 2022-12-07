@@ -1,4 +1,4 @@
-package com.example.comparateur.Model;
+package com.example.comparateur.model;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;

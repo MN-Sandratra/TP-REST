@@ -26,9 +26,4 @@ public class OffreControllerImp implements IOffreController {
     public List<Offre> getOffres(@RequestBody OffreDTO offreDTO) throws NotPartnerExceptions, NotPartnerExceptions {
         return offreRepositoryImp.getOffres(offreDTO.getId(),offreDTO.getPassword(),offreDTO.getDateDebut(),offreDTO.getDateFin(),offreDTO.getNbrPerson());
     }
-
-    @GetMapping
-    public String HelloHotel(){
-        return "Hello Hotel";
-    }
 }

@@ -9,6 +9,8 @@ public class Offre {
     private String dateDeDisponibiliteFin;
     private double prix;
 
+    private String  Image ;
+
     public UUID getId() {
         return id;
     }
@@ -47,5 +49,13 @@ public class Offre {
 
     public void setPrix(double prix) {
         this.prix = prix;
+    }
+
+    public String getImage() {
+        return Image;
+    }
+
+    public void setImage(String image) {
+        this.Image = image;
     }
 }
