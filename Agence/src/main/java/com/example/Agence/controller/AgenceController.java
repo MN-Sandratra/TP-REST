@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/agence")
 public class AgenceController {
     @GetMapping
-    public String getNom(){
-        return AgenceData.getAgence().getNom();
+    public Agence getNom(){
+        return AgenceData.getAgence();
     }
 }

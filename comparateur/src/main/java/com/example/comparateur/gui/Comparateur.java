@@ -1,15 +1,16 @@
 package com.example.comparateur.gui;
 
-import java.awt.EventQueue;
+import java.awt.*;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
-import java.awt.SystemColor;
-import java.awt.Font;
-import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.List;
@@ -40,9 +41,7 @@ import javax.swing.table.DefaultTableModel;
 @SpringBootApplication(scanBasePackages = {
         "com.example.comparateur.controller",
         "com.example.comparateur.client",
-        "com.example.comparateur.GUI",
-        "com.example.comparateur.Data",
-        "com.example.Agence.dto",
+        "com.example.comparateur.data"
 })
 public class Comparateur {
 
@@ -54,50 +53,27 @@ public class Comparateur {
     private JTextField txtnbrPersonne;
     private JTextField txtVille;
 
+    private OffreComparateurResDTO[] offres;
+
     private JTable table;
 
     private String currentTableID;
+
+    private JPanel Imagepanel;
     /**
      * Launch the application.
      */
-    private void getAgence(String ville, String dateDeb, String dateFin, int nbrPers, int etoile) {
-        List<Agence> agences=agenceRepository.findAll();
-        String col[] = {"Reference","Hotel","Pays","Ville","Place","Etoile","Prix"};
-        DefaultTableModel tableModel = new DefaultTableModel(col, 0);
-        for (Agence ag : agences
-        ) {
-            ComparateurDTO comparateurDTO=new ComparateurDTO(ville,dateDeb,dateFin,nbrPers,etoile);
-            if(Comparateurproxy == null){
-                JOptionPane.showMessageDialog(null,"Connexion refuser","Attention !",JOptionPane.ERROR_MESSAGE);
-            }else{
-                OffreComparateurResDTO[] offres = Comparateurproxy.postForObject(ag.getWebService()+"comparateur",comparateurDTO, OffreComparateurResDTO[].class);
-                Arrays.asList(offres)
-                        .forEach(System.out::println);
-                table.setModel(tableModel);
-                for (OffreComparateurResDTO f:offres
-                ) {
-                    String[] adresse=f.getAdresse().trim().split(",");
-                    String[] obj= {""+f.getId(),f.getNom_hotel(),adresse[0],adresse[1],""+f.getNbrLits(),""+f.getNbrEtoile(),""+f.getPrix()};
-                    tableModel.addRow(obj);
-                }
-            }
-        }
-    }
+
     public static void main(String[] args) {
         var ctx = new SpringApplicationBuilder(Comparateur.class)
                 .headless(false).run(args);
-        EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                try {
-                    var ex = ctx.getBean(Comparateur.class);
 
-                    Comparateur window = new Comparateur();
-                    window.frmComparateurDeVoyage.setVisible(true);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
+        EventQueue.invokeLater(() -> {
+
+            var ex = ctx.getBean(Comparateur.class);
+            ex.frmComparateurDeVoyage.setVisible(true);
         });
+
     }
 
     public Comparateur() {
@@ -181,7 +157,6 @@ public class Comparateur {
         Etoile.setBounds(112, 265, 73, 14);
         font.add(Etoile);
 
-
         JSlider sliderEtoile = new JSlider(1, 5, 1);
         sliderEtoile.addChangeListener(new ChangeListener() {
             public void stateChanged(ChangeEvent e) {
@@ -196,6 +171,20 @@ public class Comparateur {
         lblNombreDetoile.setFont(new Font("Arial", Font.PLAIN, 12));
         lblNombreDetoile.setBounds(10, 265, 116, 14);
         font.add(lblNombreDetoile);
+        JPanel panel_5 = new JPanel();
+        panel_5.setBounds(888, 316, 262, 92);
+        panel.add(panel_5);
+        panel_5.setLayout(null);
+
+        Imagepanel = new JPanel();
+        Imagepanel.setBounds(888, 74, 262, 217);
+
+        JLabel imageLabel=new JLabel();
+        Imagepanel.add(imageLabel);
+
+        panel.add(Imagepanel);
+
+
 
         table = new JTable();
         table.addMouseListener(new MouseAdapter() {
@@ -203,6 +192,7 @@ public class Comparateur {
             public void mouseClicked(MouseEvent e) {
                 int ligne=table.getSelectedRow();
                 String id=table.getModel().getValueAt(ligne, 0).toString();
+                SetImage(imageLabel,offres[ligne].getImage());
                 currentTableID=id;
             }
         });
@@ -259,14 +249,7 @@ public class Comparateur {
         lblNewLabel.setFont(new Font("Arial", Font.PLAIN, 13));
         panel_4.add(lblNewLabel);
 
-        JPanel panel_2 = new JPanel();
-        panel_2.setBounds(888, 74, 262, 217);
-        panel.add(panel_2);
 
-        JPanel panel_5 = new JPanel();
-        panel_5.setBounds(888, 316, 262, 92);
-        panel.add(panel_5);
-        panel_5.setLayout(null);
 
         JPanel panel_6 = new JPanel();
         panel_6.setBackground(Color.GRAY);
@@ -276,6 +259,44 @@ public class Comparateur {
         JLabel lblDescription = new JLabel("Description");
         panel_6.add(lblDescription);
         lblDescription.setFont(new Font("Arial", Font.PLAIN, 13));
+    }
+    private void SetImage(JLabel limage,String ImageUrl){
+        URL url = null;
+        java.awt.Image image = null;
+        try {
+            url = new URL(ImageUrl);
+            image = ImageIO.read(url);
+        } catch (MalformedURLException ex) {
+            System.out.println("Malformed URL");
+        } catch (IOException iox) {
+            System.out.println("Can not load file");
+        }
+        ImageIcon imageIcon = new ImageIcon(new ImageIcon(url).getImage().getScaledInstance(250, 200, Image.SCALE_DEFAULT));
+        limage.setIcon(imageIcon);
+
+    }
+    private void getAgence(String ville, String dateDeb, String dateFin, int nbrPers, int etoile) {
+        List<Agence> agences=agenceRepository.findAll();
+        String col[] = {"Reference","Hotel","Pays","Ville","Place","Etoile","Prix"};
+        DefaultTableModel tableModel = new DefaultTableModel(col, 0);
+        for (Agence ag : agences
+        ) {
+            ComparateurDTO comparateurDTO=new ComparateurDTO(ville,dateDeb,dateFin,nbrPers,etoile);
+            if(Comparateurproxy == null){
+                JOptionPane.showMessageDialog(null,"Connexion refuser","Attention !",JOptionPane.ERROR_MESSAGE);
+            }else{
+                offres = Comparateurproxy.postForObject(ag.getWebService()+"comparateur",comparateurDTO, OffreComparateurResDTO[].class);
+                Arrays.asList(offres)
+                        .forEach(System.out::println);
+                table.setModel(tableModel);
+                for (OffreComparateurResDTO f:offres
+                ) {
+                    String[] adresse=f.getAdresse().trim().split(",");
+                    String[] obj= {""+f.getId(),f.getNom_hotel(),adresse[0],adresse[1],""+f.getNbrLits(),""+f.getNbrEtoile(),""+f.getPrix()};
+                    tableModel.addRow(obj);
+                }
+            }
+        }
     }
 
 
