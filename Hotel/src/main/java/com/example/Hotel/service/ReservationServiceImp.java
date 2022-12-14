@@ -1,4 +1,4 @@
-package com.example.Hotel.repositories;
+package com.example.Hotel.service;
 
 import com.example.Hotel.data.HotelData;
 import com.example.Hotel.exception.NotPartnerExceptions;
@@ -8,6 +8,9 @@ import com.example.Hotel.model.Offre;
 import com.example.Hotel.model.Partenariat;
 import com.example.Hotel.model.Reservation;
 import com.example.Hotel.model.hotel.Chambre;
+import com.example.Hotel.repositories.ChambreRepository;
+import com.example.Hotel.repositories.ReservationRepository;
+import com.example.Hotel.service.IReservationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -18,7 +21,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Repository
-public class ReservationRepositoryImp implements IReservationRepository{
+public class ReservationServiceImp implements IReservationService {
     private final HotelData hotelData;
 
     @Autowired
@@ -26,7 +29,7 @@ public class ReservationRepositoryImp implements IReservationRepository{
 
     @Autowired
     private ChambreRepository chambreRepository;
-    public ReservationRepositoryImp(HotelData hotelData){
+    public ReservationServiceImp(HotelData hotelData){
         this.hotelData = hotelData;
     }
 

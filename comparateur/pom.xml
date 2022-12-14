@@ -42,12 +42,23 @@
 			<version>1.4</version>
 		</dependency>
 	</dependencies>
+	<profiles>
+		<profile>
+			<id>interface</id>
+			<properties>
+				<spring.boot.mainclass>com.example.Agence.GUI.HotelAgencyMain</spring.boot.mainclass>
+			</properties>
+		</profile>
+	</profiles>
 
 	<build>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+				<configuration>
+					<mainClass>${spring.boot.mainclass}</mainClass>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>

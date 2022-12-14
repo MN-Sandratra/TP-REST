@@ -66,7 +66,8 @@ public class HotelData {
         h = new Hotel("Ibis", 4, adresse1, listChambre1);
         List<Partenariat> p=new ArrayList<>();
         p.addAll(Arrays.asList(
-                new Partenariat(1,3, "AgenceMontpellier","test123")
+                new Partenariat(1,3, "AgenceMontpellier","test123"),
+                new Partenariat(2,5,"Covoyageur","test1234")
         ));
         h.setPartenariats(p);
 

@@ -7,6 +7,7 @@ public class OffreComparateurResDTO {
     private String nom_hotel;
     private String adresse;
 
+    private String agence;
     private String image;
     private int nbrLits;
     private int nbrEtoile;
@@ -75,5 +76,13 @@ public class OffreComparateurResDTO {
 
     public void setImage(String image) {
         this.image = image;
+    }
+
+    public void setAgence(String agence) {
+        this.agence = agence;
+    }
+
+    public String getAgence() {
+        return agence;
     }
 }

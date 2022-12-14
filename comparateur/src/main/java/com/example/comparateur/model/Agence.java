@@ -9,15 +9,13 @@ public class Agence {
     @GeneratedValue
     @Id
     int id;
-    String Nom;
 
     String WebService;
 
     public Agence() {
     }
 
-    public Agence(String nom, String webService) {
-        Nom = nom;
+    public Agence(String webService) {
         WebService = webService;
     }
 
@@ -27,14 +25,6 @@ public class Agence {
 
     public void setId(int id) {
         this.id = id;
-    }
-
-    public String getNom() {
-        return Nom;
-    }
-
-    public void setNom(String nom) {
-        Nom = nom;
     }
 
     public String getWebService() {

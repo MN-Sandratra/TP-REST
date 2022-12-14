@@ -18,7 +18,9 @@ public class AgenceData {
         return args -> {
             logger.info("Preloading Agence Database");
             String ws="http://localhost:8090/api/";
-            agenceRepository.save(new Agence( "Agence Montpellier",ws));
+            String ws2="http://localhost:8091/api/";
+            agenceRepository.save(new Agence(ws));
+            agenceRepository.save(new Agence(ws2));
             logger.info("Save Agence Finished");
         };
     }

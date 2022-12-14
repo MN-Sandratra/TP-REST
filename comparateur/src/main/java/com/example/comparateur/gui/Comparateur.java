@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -53,7 +54,10 @@ public class Comparateur {
     private JTextField txtnbrPersonne;
     private JTextField txtVille;
 
-    private OffreComparateurResDTO[] offres;
+    private JLabel lblAgence;
+
+
+    private List<OffreComparateurResDTO> offres=new ArrayList<>();
 
     private JTable table;
 
@@ -128,8 +132,6 @@ public class Comparateur {
         lblNombreDePersonne.setBounds(10, 206, 175, 14);
         font.add(lblNombreDePersonne);
 
-
-
         txtnbrPersonne = new JTextField();
         txtnbrPersonne.setColumns(10);
         txtnbrPersonne.setBounds(10, 228, 157, 26);
@@ -171,10 +173,16 @@ public class Comparateur {
         lblNombreDetoile.setFont(new Font("Arial", Font.PLAIN, 12));
         lblNombreDetoile.setBounds(10, 265, 116, 14);
         font.add(lblNombreDetoile);
+
         JPanel panel_5 = new JPanel();
         panel_5.setBounds(888, 316, 262, 92);
         panel.add(panel_5);
         panel_5.setLayout(null);
+
+        lblAgence = new JLabel("");
+        panel_5.add(lblAgence);
+        lblAgence.setBounds(30, 10, 262, 92);
+        lblAgence.setFont(new Font("Arial", Font.PLAIN, 13));
 
         Imagepanel = new JPanel();
         Imagepanel.setBounds(888, 74, 262, 217);
@@ -184,15 +192,14 @@ public class Comparateur {
 
         panel.add(Imagepanel);
 
-
-
         table = new JTable();
         table.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 int ligne=table.getSelectedRow();
                 String id=table.getModel().getValueAt(ligne, 0).toString();
-                SetImage(imageLabel,offres[ligne].getImage());
+                lblAgence.setText("Agence: "+offres.get(ligne).getAgence());
+                SetImage(imageLabel,offres.get(ligne).getImage());
                 currentTableID=id;
             }
         });
@@ -264,8 +271,10 @@ public class Comparateur {
         URL url = null;
         java.awt.Image image = null;
         try {
+            System.out.println(url);
             url = new URL(ImageUrl);
             image = ImageIO.read(url);
+
         } catch (MalformedURLException ex) {
             System.out.println("Malformed URL");
         } catch (IOException iox) {
@@ -276,21 +285,24 @@ public class Comparateur {
 
     }
     private void getAgence(String ville, String dateDeb, String dateFin, int nbrPers, int etoile) {
+        lblAgence.setText("");
         List<Agence> agences=agenceRepository.findAll();
-        String col[] = {"Reference","Hotel","Pays","Ville","Place","Etoile","Prix"};
+        String col[] = {"Reference","Hotel","Pays","Ville","Place","Etoile","Prix €"};
         DefaultTableModel tableModel = new DefaultTableModel(col, 0);
         for (Agence ag : agences
         ) {
+            String currentAgence=Comparateurproxy.getForObject(ag.getWebService()+"agence",String.class);
             ComparateurDTO comparateurDTO=new ComparateurDTO(ville,dateDeb,dateFin,nbrPers,etoile);
             if(Comparateurproxy == null){
                 JOptionPane.showMessageDialog(null,"Connexion refuser","Attention !",JOptionPane.ERROR_MESSAGE);
             }else{
-                offres = Comparateurproxy.postForObject(ag.getWebService()+"comparateur",comparateurDTO, OffreComparateurResDTO[].class);
-                Arrays.asList(offres)
-                        .forEach(System.out::println);
+                OffreComparateurResDTO[] usingoffre;
+                usingoffre = Comparateurproxy.postForObject(ag.getWebService()+"comparateur",comparateurDTO, OffreComparateurResDTO[].class);
                 table.setModel(tableModel);
-                for (OffreComparateurResDTO f:offres
+                for (OffreComparateurResDTO f:usingoffre
                 ) {
+                    f.setAgence(currentAgence);
+                    offres.add(f);
                     String[] adresse=f.getAdresse().trim().split(",");
                     String[] obj= {""+f.getId(),f.getNom_hotel(),adresse[0],adresse[1],""+f.getNbrLits(),""+f.getNbrEtoile(),""+f.getPrix()};
                     tableModel.addRow(obj);

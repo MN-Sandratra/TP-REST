@@ -23,6 +23,7 @@ public class AgenceData {
         return args -> {
             logger.info("Preloading Hotel Database");
             webserviceRepository.save(new Webservice("http://localhost:8080/api/"));
+            webserviceRepository.save(new Webservice("http://localhost:8081/api/"));
             logger.info("Save Hotel Finished");
         };
     }

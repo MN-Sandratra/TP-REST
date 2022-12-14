@@ -1,4 +1,4 @@
-package com.example.Hotel.repositories;
+package com.example.Hotel.service;
 
 import com.example.Hotel.data.HotelData;
 import com.example.Hotel.exception.NotPartnerExceptions;
@@ -6,6 +6,9 @@ import com.example.Hotel.model.Offre;
 import com.example.Hotel.model.Partenariat;
 import com.example.Hotel.model.Reservation;
 import com.example.Hotel.model.hotel.Chambre;
+import com.example.Hotel.repositories.ChambreRepository;
+import com.example.Hotel.repositories.ReservationRepository;
+import com.example.Hotel.service.IOffreService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -15,8 +18,7 @@ import java.time.format.DateTimeParseException;
 import java.util.*;
 
 @Repository
-public class OffreRepositoryImp implements IOffreRepository {
-
+public class OffreServiceImp implements IOffreService {
     @Autowired
     private ReservationRepository reservationRepository;
 
@@ -24,7 +26,7 @@ public class OffreRepositoryImp implements IOffreRepository {
     private ChambreRepository chambreRepository;
 
     private final HotelData hotelData;
-    public OffreRepositoryImp(HotelData hotelData) {
+    public OffreServiceImp(HotelData hotelData) {
         this.hotelData = hotelData;
     }
 
