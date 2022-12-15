@@ -32,15 +32,16 @@ def runProjectLinux(myOs):
     
     print("\n==== Lancement des Agences ====")
     if(myOs==1):
-        command="make pAgenceSimple"
-        os.system("gnome-terminal -- bash -c 'bash -c \""+command+";bash\"'")
-        command="make pAgence2Simple"
-        os.system("gnome-terminal -- bash -c 'bash -c \""+command+";bash\"'")
-    else:
         command="make pAgenceinterface"
         os.system("gnome-terminal -- bash -c 'bash -c \""+command+";bash\"'")
         command="make pAgence2interface"
         os.system("gnome-terminal -- bash -c 'bash -c \""+command+";bash\"'")
+    else:
+        command="make pAgenceSimple"
+        os.system("gnome-terminal -- bash -c 'bash -c \""+command+";bash\"'")
+        command="make pAgence2Simple"
+        os.system("gnome-terminal -- bash -c 'bash -c \""+command+";bash\"'")
+        
     if(myOs==2):
         print("\n==== Lancement du Comparateur ====")
         command="make pComparateur"
