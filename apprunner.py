@@ -6,23 +6,23 @@ def build():
     print("==== Compilation des projets ====\n")
     subprocess.call(["make"])
 
-def runProjectWindows(os):
+def runProjectWindows(myOs):
     print("\n==== Lancement des hotels ====")
     subprocess.Popen(["make" ,"pHotel"],creationflags=subprocess.CREATE_NEW_CONSOLE)
     subprocess.Popen(["make" ,"pHotel2"],creationflags=subprocess.CREATE_NEW_CONSOLE)
     print("\n==== Lancement des Agences ====")
-    if(os==1):
+    if(myOs==1):
         subprocess.Popen(["make" ,"pAgenceinterface"],creationflags=subprocess.CREATE_NEW_CONSOLE)
         subprocess.Popen(["make" ,"pAgence2interface"],creationflags=subprocess.CREATE_NEW_CONSOLE)
     else:
         subprocess.Popen(["make" ,"pAgenceSimple"],creationflags=subprocess.CREATE_NEW_CONSOLE)
         subprocess.Popen(["make" ,"pAgence2Simple"],creationflags=subprocess.CREATE_NEW_CONSOLE)
     
-    if(os==2):
+    if(myOs==2):
         print("\n==== Lancement du Comparateur ====")
         subprocess.Popen(["make" ,"pComparateur"])
 
-def runProjectLinux(os):
+def runProjectLinux(myOs):
     print("\n==== Lancement des hotels ====")
     command="make pHotel" 
     os.system("gnome-terminal -- bash -c 'bash -c \""+command+";bash\"'")
@@ -31,7 +31,7 @@ def runProjectLinux(os):
     os.system("gnome-terminal -- bash -c 'bash -c \""+command+";bash\"'")
     
     print("\n==== Lancement des Agences ====")
-    if(os==1):
+    if(myOs==1):
         command="make pAgenceSimple"
         os.system("gnome-terminal -- bash -c 'bash -c \""+command+";bash\"'")
         command="make pAgence2Simple"
@@ -41,7 +41,7 @@ def runProjectLinux(os):
         os.system("gnome-terminal -- bash -c 'bash -c \""+command+";bash\"'")
         command="make pAgence2interface"
         os.system("gnome-terminal -- bash -c 'bash -c \""+command+";bash\"'")
-    if(os==2):
+    if(myOs==2):
         print("\n==== Lancement du Comparateur ====")
         command="make pComparateur"
         os.system("gnome-terminal -- bash -c 'bash -c \""+command+";bash\"'")
